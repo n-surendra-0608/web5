@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriEmpower - Rural & Agricultural Community Hub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        agri: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16',
+                        },
+                        earth: {
+                            100: '#fef3c7',
+                            500: '#d97706',
+                            800: '#92400e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(229, 231, 235, 0.8);
+        }
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #15803d 0%, #052e16 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .dark .gradient-text {
+            background: linear-gradient(135deg, #4ade80 0%, #bbf7d0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #16a34a;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-agri-500 selection:text-white">
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-20 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- HEADER & NAVIGATION -->
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-agri-600 to-agri-400 flex items-center justify-center text-white shadow-lg shadow-agri-500/30">
+                        <i class="fa-solid font-bold text-2xl fa-wheat-awn"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">Agri<span class="text-agri-600 dark:text-agri-400">Empower</span></span>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 -mt-1 font-medium">Digital Agriculture & Rural Hub</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#hero" class="text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-agri-600 dark:hover:text-agri-400 transition">Home</a>
+                    <a href="#marketplace" class="text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-agri-600 dark:hover:text-agri-400 transition">Marketplace</a>
+                    <a href="#advisory" class="text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-agri-600 dark:hover:text-agri-400 transition">Smart Advisory</a>
+                    <a href="#analytics" class="text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-agri-600 dark:hover:text-agri-400 transition">Mandi Analytics</a>
+                    <a href="#forum" class="text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-agri-600 dark:hover:text-agri-400 transition">Community Forum</a>
+                    <a href="#contact" class="text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-agri-600 dark:hover:text-agri-400 transition">Contact</a>
+                </nav>
+
+                <!-- Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Cart Button -->
+                    <button id="cartBtn" onclick="toggleCartModal()" class="relative p-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition">
+                        <i class="fa-solid fa-cart-shopping text-xl"></i>
+                        <span id="cartBadge" class="absolute -top-1 -right-1 bg-agri-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center scale-0 transition-transform">0</span>
+                    </button>
+
+                    <!-- Add Listing CTA -->
+                    <button onclick="openListingModal()" class="hidden sm:inline-flex items-center space-x-2 bg-agri-600 hover:bg-agri-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-md shadow-agri-600/20 transition transform active:scale-95">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Sell Produce</span>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-2 pb-4 space-y-3">
+            <a href="#hero" onclick="toggleMobileMenu()" class="block text-slate-700 dark:text-slate-200 font-medium py-2">Home</a>
+            <a href="#marketplace" onclick="toggleMobileMenu()" class="block text-slate-700 dark:text-slate-200 font-medium py-2">Marketplace</a>
+            <a href="#advisory" onclick="toggleMobileMenu()" class="block text-slate-700 dark:text-slate-200 font-medium py-2">Smart Advisory</a>
+            <a href="#analytics" onclick="toggleMobileMenu()" class="block text-slate-700 dark:text-slate-200 font-medium py-2">Mandi Analytics</a>
+            <a href="#forum" onclick="toggleMobileMenu()" class="block text-slate-700 dark:text-slate-200 font-medium py-2">Community Forum</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="block text-slate-700 dark:text-slate-200 font-medium py-2">Contact</a>
+            <button onclick="openListingModal(); toggleMobileMenu()" class="w-full bg-agri-600 text-white py-2.5 rounded-xl font-semibold text-sm shadow">Sell Produce</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow">
+
+        <!-- 1. HERO SECTION -->
+        <section id="hero" class="relative pt-12 pb-20 md:pt-20 md:pb-32 overflow-hidden bg-gradient-to-b from-agri-50/60 via-slate-50 to-white dark:from-slate-950 dark:via-slate-900 dark:to-slate-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <!-- Left Hero Content -->
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-agri-100 dark:bg-agri-950/80 border border-agri-200 dark:border-agri-800 text-agri-800 dark:text-agri-300 text-xs font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-agri-500 animate-ping"></span>
+                            <span>Empowering Farmers Across Nation</span>
+                        </div>
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+                            Smart Agriculture for a <span class="gradient-text">Smarter & Sustainable</span> Future.
+                        </h1>
+                        <p class="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 font-normal">
+                            Connecting rural farming communities directly with consumers, providing AI-powered crop advisory, real-time market mandi prices, and an active peer-to-peer knowledge hub.
+                        </p>
+                        
+                        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                            <a href="#marketplace" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-agri-600 hover:bg-agri-700 text-white font-bold text-center shadow-lg shadow-agri-600/30 transition transform hover:-translate-y-0.5">
+                                Explore Marketplace
+                            </a>
+                            <a href="#advisory" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-agri-500 text-slate-700 dark:text-slate-200 font-bold text-center transition">
+                                <i class="fa-solid fa-wand-magic-sparkles text-agri-600 dark:text-agri-400 mr-2"></i> Get Crop Advisory
+                            </a>
+                        </div>
+
+                        <!-- Mini Stats Badge Grid -->
+                        <div class="grid grid-cols-3 gap-4 pt-8 border-t border-slate-200 dark:border-slate-800 max-w-lg mx-auto lg:mx-0">
+                            <div>
+                                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">12,500+</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Active Farmers</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">₹0.00</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Middleman Fee</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">98.4%</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">Advisory Accuracy</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Visual Card -->
+                    <div class="lg:col-span-5 relative">
+                        <div class="absolute -top-10 -left-10 w-72 h-72 bg-agri-300/30 dark:bg-agri-900/20 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="relative glass-card rounded-3xl p-6 shadow-2xl border border-slate-200/60 dark:border-slate-800">
+                            <img src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=800&q=80" alt="Farmer with harvest" class="w-full h-64 sm:h-72 object-cover rounded-2xl mb-6 shadow-md" onerror="this.src='https://placehold.co/600x400/16a34a/ffffff?text=AgriEmpower+Community'">
+                            
+                            <!-- Floating Card Badge -->
+                            <div class="flex items-center justify-between p-4 bg-agri-50 dark:bg-slate-800/80 rounded-2xl border border-agri-200/60 dark:border-slate-700">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl bg-agri-600 text-white flex items-center justify-center font-bold">
+                                        <i class="fa-solid fa-leaf"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-slate-900 dark:text-white">100% Organic Direct</h4>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">Fresh from farm to your kitchen</p>
+                                    </div>
+                                </div>
+                                <span class="bg-agri-200 dark:bg-agri-900 text-agri-800 dark:text-agri-300 text-xs font-bold px-2.5 py-1 rounded-lg">Verified</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. DIRECT FARMERS MARKETPLACE -->
+        <section id="marketplace" class="py-16 bg-white dark:bg-slate-900 transition-colors">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Section Header -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                    <div>
+                        <span class="text-agri-600 dark:text-agri-400 font-bold text-sm tracking-wider uppercase">Direct Produce & Tools</span>
+                        <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white mt-1">Farmer Marketplace</h2>
+                        <p class="text-slate-600 dark:text-slate-400 mt-1">Buy directly from verified local farmers at fair transparent rates.</p>
+                    </div>
+
+                    <button onclick="openListingModal()" class="inline-flex items-center justify-center space-x-2 bg-agri-600 hover:bg-agri-700 text-white px-5 py-3 rounded-xl font-bold text-sm shadow transition">
+                        <i class="fa-solid fa-plus-circle"></i>
+                        <span>List Your Produce</span>
+                    </button>
+                </div>
+
+                <!-- Filters & Search Bar -->
+                <div class="bg-slate-100 dark:bg-slate-800/60 p-4 rounded-2xl mb-8 flex flex-col md:flex-row gap-4 justify-between items-center">
+                    <!-- Search Input -->
+                    <div class="relative w-full md:w-80">
+                        <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-400"></i>
+                        <input type="text" id="marketSearch" onkeyup="renderMarketplace()" placeholder="Search wheat, tomatoes, seeds..." class="w-full pl-11 pr-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-agri-500 dark:text-white">
+                    </div>
+
+                    <!-- Category Pills -->
+                    <div class="flex flex-wrap gap-2 w-full md:w-auto justify-start md:justify-end" id="categoryFilters">
+                        <button onclick="filterCategory('All')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-agri-600 text-white" data-cat="All">All</button>
+                        <button onclick="filterCategory('Organic Produce')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700" data-cat="Organic Produce">Organic Produce</button>
+                        <button onclick="filterCategory('Grains & Crops')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700" data-cat="Grains & Crops">Grains & Crops</button>
+                        <button onclick="filterCategory('Tools & Seeds')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700" data-cat="Tools & Seeds">Tools & Seeds</button>
+                    </div>
+                </div>
+
+                <!-- Marketplace Grid -->
+                <div id="marketplaceGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Dynamic Javascript Content Inserted Here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. SMART CROP & WEATHER ADVISORY TOOL -->
+        <section id="advisory" class="py-16 bg-slate-50 dark:bg-slate-950 transition-colors">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-agri-600 dark:text-agri-400 font-bold text-sm tracking-wider uppercase">Precision Advisory</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white mt-1">Smart Agriculture Advisory Widget</h2>
+                    <p class="text-slate-600 dark:text-slate-400 mt-2">Select your localized crop preferences, soil type, and climate region to generate real-time agronomic recommendations and pest management insights.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <!-- Interactive Selector Form -->
+                    <div class="lg:col-span-5 bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-5">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-sliders text-agri-600"></i>
+                            <span>Input Farm Parameters</span>
+                        </h3>
+
+                        <!-- Crop Select -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Primary Crop Type</label>
+                            <select id="advCrop" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium focus:outline-none focus:border-agri-500">
+                                <option value="wheat">🌾 Wheat (Rabi Season)</option>
+                                <option value="rice">🌾 Paddy / Rice (Kharif Season)</option>
+                                <option value="cotton">🧵 Cotton (Cash Crop)</option>
+                                <option value="sugarcane">🎋 Sugarcane</option>
+                                <option value="tomato">🍅 Tomato / Vegetables</option>
+                            </select>
+                        </div>
+
+                        <!-- Soil Select -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Soil Texture / Type</label>
+                            <select id="advSoil" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium focus:outline-none focus:border-agri-500">
+                                <option value="loamy">Loamy Soil (Balanced Nutrient Retention)</option>
+                                <option value="clay">Clay Soil (High Moisture Retention)</option>
+                                <option value="sandy">Sandy Soil (High Drainage)</option>
+                                <option value="black">Black Cotton Soil (Rich Clay Content)</option>
+                            </select>
+                        </div>
+
+                        <!-- Region/Climate -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Regional Climate Zone</label>
+                            <select id="advRegion" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium focus:outline-none focus:border-agri-500">
+                                <option value="north">Northern Plains (Semi-Arid / Tropical)</option>
+                                <option value="south">Southern Coastal (Humid / High Rainfall)</option>
+                                <option value="central">Central Deccan Plateau (Monsoonal)</option>
+                                <option value="west">Western Arid Zone (Dry / Irrigation-dependent)</option>
+                            </select>
+                        </div>
+
+                        <button onclick="generateAdvisory()" class="w-full py-3.5 bg-agri-600 hover:bg-agri-700 text-white font-bold rounded-xl shadow-lg shadow-agri-600/30 transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-sparkles"></i>
+                            <span>Generate Smart Recommendation</span>
+                        </button>
+                    </div>
+
+                    <!-- Recommendation Display Hub -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <!-- Simulated Weather Bar -->
+                        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 rounded-3xl shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="p-3 bg-white/20 backdrop-blur-md rounded-2xl text-3xl">
+                                    <i class="fa-solid fa-cloud-sun-rain"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-2xl font-bold">29°C <span class="text-sm font-normal text-blue-100">Partly Cloudy</span></h4>
+                                    <p class="text-xs text-blue-100 mt-0.5">Humidity: 68% • Expected Rain: 12mm (In 48h)</p>
+                                </div>
+                            </div>
+                            <span class="bg-white/20 text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-sm border border-white/30">Live Local Weather</span>
+                        </div>
+
+                        <!-- Output Card Container -->
+                        <div id="advisoryResult" class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+                            <!-- Dynamic js populated recommendations -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. AGRICULTURAL ANALYTICS & MANDI DASHBOARD -->
+        <section id="analytics" class="py-16 bg-white dark:bg-slate-900 transition-colors">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                    <div>
+                        <span class="text-agri-600 dark:text-agri-400 font-bold text-sm tracking-wider uppercase">Market Intelligence</span>
+                        <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white mt-1">Live Mandi Prices & Demand Trends</h2>
+                        <p class="text-slate-600 dark:text-slate-400 mt-1">Updated market rates across regional wholesale mandis.</p>
+                    </div>
+
+                    <div class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-xl">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>Live Feed Updated 10m ago</span>
+                    </div>
+                </div>
+
+                <!-- Stats Highlight Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase">
+                            <span>Wheat (Qtl)</span>
+                            <span class="text-emerald-600 font-bold"><i class="fa-solid fa-arrow-up"></i> +3.2%</span>
+                        </div>
+                        <p class="text-2xl font-extrabold text-slate-900 dark:text-white mt-2">₹2,280 / Qtl</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Max rate in Central Mandi</p>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase">
+                            <span>Basmati Rice</span>
+                            <span class="text-emerald-600 font-bold"><i class="fa-solid fa-arrow-up"></i> +1.8%</span>
+                        </div>
+                        <p class="text-2xl font-extrabold text-slate-900 dark:text-white mt-2">₹4,150 / Qtl</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">High export demand</p>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase">
+                            <span>Fresh Tomatoes</span>
+                            <span class="text-rose-500 font-bold"><i class="fa-solid fa-arrow-down"></i> -4.1%</span>
+                        </div>
+                        <p class="text-2xl font-extrabold text-slate-900 dark:text-white mt-2">₹1,850 / Qtl</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Increased seasonal influx</p>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase">
+                            <span>Soil Nitrogen Level</span>
+                            <span class="text-amber-500 font-bold">Optimal</span>
+                        </div>
+                        <p class="text-2xl font-extrabold text-slate-900 dark:text-white mt-2">78% Soil Index</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Ideal for Rabi Sowing</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Main Price Trend Chart -->
+                    <div class="lg:col-span-8 bg-slate-50 dark:bg-slate-800/40 p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-base font-bold text-slate-900 dark:text-white">Price Movements (Past 6 Months)</h3>
+                            <span class="text-xs text-slate-500">Rate per Quintal (₹)</span>
+                        </div>
+                        <div class="h-64 sm:h-80 w-full">
+                            <canvas id="mandiChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Regional Mandi Price Table -->
+                    <div class="lg:col-span-4 bg-slate-50 dark:bg-slate-800/40 p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white mb-4">Regional Mandi Highlights</h3>
+                        
+                        <div class="space-y-3 custom-scrollbar max-h-80 overflow-y-auto pr-1">
+                            <div class="flex items-center justify-between p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 text-xs">
+                                <div>
+                                    <p class="font-bold text-slate-900 dark:text-white">Khanna Mandi</p>
+                                    <p class="text-slate-500">Wheat (Grade A)</p>
+                                </div>
+                                <span class="font-extrabold text-agri-600 dark:text-agri-400">₹2,310/Qtl</span>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 text-xs">
+                                <div>
+                                    <p class="font-bold text-slate-900 dark:text-white">Karnal APMC</p>
+                                    <p class="text-slate-500">Paddy (1121)</p>
+                                </div>
+                                <span class="font-extrabold text-agri-600 dark:text-agri-400">₹4,200/Qtl</span>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 text-xs">
+                                <div>
+                                    <p class="font-bold text-slate-900 dark:text-white">Indore Mandi</p>
+                                    <p class="text-slate-500">Soyabean</p>
+                                </div>
+                                <span class="font-extrabold text-agri-600 dark:text-agri-400">₹4,650/Qtl</span>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 text-xs">
+                                <div>
+                                    <p class="font-bold text-slate-900 dark:text-white">Nashik Wholesale</p>
+                                    <p class="text-slate-500">Red Onions</p>
+                                </div>
+                                <span class="font-extrabold text-agri-600 dark:text-agri-400">₹1,420/Qtl</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. COMMUNITY FORUM & DISCUSSION HUB -->
+        <section id="forum" class="py-16 bg-slate-50 dark:bg-slate-950 transition-colors">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                    <div>
+                        <span class="text-agri-600 dark:text-agri-400 font-bold text-sm tracking-wider uppercase">Farmer Knowledge Network</span>
+                        <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white mt-1">Community Forum & Peer Q&A</h2>
+                        <p class="text-slate-600 dark:text-slate-400 mt-1">Ask questions, share sustainable techniques, and learn from experienced farmers.</p>
+                    </div>
+
+                    <button onclick="openForumModal()" class="inline-flex items-center justify-center space-x-2 bg-agri-600 hover:bg-agri-700 text-white px-5 py-3 rounded-xl font-bold text-sm shadow transition">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>Start Discussion</span>
+                    </button>
+                </div>
+
+                <!-- Forum Feed Container -->
+                <div id="forumList" class="space-y-4 max-w-4xl mx-auto">
+                    <!-- Dynamic Forum Posts Injected Here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. CONTACT & FEEDBACK SECTION -->
+        <section id="contact" class="py-16 bg-white dark:bg-slate-900 transition-colors">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <div class="lg:col-span-5 space-y-6">
+                        <span class="text-agri-600 dark:text-agri-400 font-bold text-sm tracking-wider uppercase">Get In Touch</span>
+                        <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">Connecting Rural Innovation Across Regions</h2>
+                        <p class="text-slate-600 dark:text-slate-400">Have questions about joining AgriEmpower, becoming a direct seller, or introducing smart advisory to your local farming group?</p>
+
+                        <div class="space-y-4 pt-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-2xl bg-agri-100 dark:bg-agri-950 text-agri-600 dark:text-agri-400 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase">Email Support</p>
+                                    <p class="text-slate-900 dark:text-white font-bold">support@agriempower.org</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-2xl bg-agri-100 dark:bg-agri-950 text-agri-600 dark:text-agri-400 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase">Kisan Toll-Free Helpline</p>
+                                    <p class="text-slate-900 dark:text-white font-bold">1800-180-1551 (24/7)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form Card -->
+                    <div class="lg:col-span-7 bg-slate-50 dark:bg-slate-800/40 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl">
+                        <form id="contactForm" onsubmit="handleContactSubmit(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Full Name</label>
+                                    <input type="text" required id="cName" placeholder="Rajesh Kumar" class="w-full p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-agri-500 dark:text-white">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Phone / Mobile</label>
+                                    <input type="tel" required id="cPhone" placeholder="+91 98765 43210" class="w-full p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-agri-500 dark:text-white">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">User Role</label>
+                                <select id="cRole" class="w-full p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-agri-500 dark:text-white">
+                                    <option value="Farmer">Local Farmer</option>
+                                    <option value="Buyer">Consumer / Bulk Buyer</option>
+                                    <option value="Agronomist">Agronomist / Expert</option>
+                                    <option value="Student">SE Student / Researcher</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Message / Query</label>
+                                <textarea required id="cMsg" rows="4" placeholder="How can we assist your farming journey?" class="w-full p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-agri-500 dark:text-white"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full py-3.5 bg-agri-600 hover:bg-agri-700 text-white font-bold rounded-xl shadow-lg transition">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-agri-600 flex items-center justify-center text-white font-bold">
+                    <i class="fa-solid fa-wheat-awn"></i>
+                </div>
+                <span class="text-xl font-bold text-white">AgriEmpower</span>
+            </div>
+
+            <p class="text-xs text-center md:text-left">
+                &copy; 2026 AgriEmpower - SE Agriculture Web Task. Built with Tailwind CSS & LocalStorage.
+            </p>
+
+            <div class="flex space-x-4 text-slate-400">
+                <a href="#" class="hover:text-agri-400"><i class="fa-brands fa-twitter text-lg"></i></a>
+                <a href="#" class="hover:text-agri-400"><i class="fa-brands fa-facebook text-lg"></i></a>
+                <a href="#" class="hover:text-agri-400"><i class="fa-brands fa-github text-lg"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODALS -->
+
+    <!-- 1. CART MODAL -->
+    <div id="cartModal" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex justify-end">
+        <div class="w-full max-w-md bg-white dark:bg-slate-900 h-full p-6 shadow-2xl flex flex-col justify-between overflow-y-auto">
+            <div>
+                <div class="flex items-center justify-between border-b pb-4 border-slate-200 dark:border-slate-800">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-cart-shopping text-agri-600"></i>
+                        <span>Direct Cart Order</span>
+                    </h3>
+                    <button onclick="toggleCartModal()" class="text-slate-400 hover:text-slate-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+
+                <div id="cartItemsList" class="py-4 space-y-4">
+                    <!-- Cart items rendered dynamically -->
+                </div>
+            </div>
+
+            <div class="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-4">
+                <div class="flex justify-between items-center font-bold text-lg text-slate-900 dark:text-white">
+                    <span>Total Amount:</span>
+                    <span id="cartTotal">₹0</span>
+                </div>
+                <button onclick="checkoutCart()" class="w-full py-3.5 bg-agri-600 hover:bg-agri-700 text-white font-bold rounded-xl shadow-lg transition">
+                    Proceed to Direct Purchase
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. ADD PRODUCE LISTING MODAL -->
+    <div id="listingModal" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-slate-800">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-4">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white">List Produce for Direct Sale</h3>
+                <button onclick="closeListingModal()" class="text-slate-400 hover:text-slate-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="listingForm" onsubmit="submitNewListing(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Item Title</label>
+                    <input type="text" id="mTitle" required placeholder="Organic Organic Desi Wheat" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm dark:text-white">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Category</label>
+                        <select id="mCat" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm dark:text-white">
+                            <option value="Organic Produce">Organic Produce</option>
+                            <option value="Grains & Crops">Grains & Crops</option>
+                            <option value="Tools & Seeds">Tools & Seeds</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Price (₹)</label>
+                        <input type="number" id="mPrice" required placeholder="120" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm dark:text-white">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Unit / Qty</label>
+                        <input type="text" id="mUnit" required placeholder="per Kg or Quintal" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Farmer Name / Location</label>
+                        <input type="text" id="mFarmer" required placeholder="Gurpreet, Punjab" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm dark:text-white">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Image URL (Optional)</label>
+                    <input type="url" id="mImg" placeholder="https://images.unsplash.com/..." class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm dark:text-white">
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-agri-600 hover:bg-agri-700 text-white font-bold rounded-xl shadow-lg">
+                    Publish Produce Listing
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. NEW FORUM QUESTION MODAL -->
+    <div id="forumModal" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-slate-800">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-4">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white">Post Community Question</h3>
+                <button onclick="closeForumModal()" class="text-slate-400 hover:text-slate-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="forumForm" onsubmit="submitForumPost(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Your Name</label>
+                    <input type="text" id="fAuthor" required placeholder="Ramesh Chandra" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm dark:text-white">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Question / Discussion Topic</label>
+                    <input type="text" id="fTitle" required placeholder="How to effectively mitigate Yellow Rust in Wheat?" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm dark:text-white">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">Detailed Explanation</label>
+                    <textarea id="fBody" required rows="3" placeholder="Provide extra context about soil condition or crop age..." class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm dark:text-white"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-agri-600 hover:bg-agri-700 text-white font-bold rounded-xl shadow-lg">
+                    Post Question
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- JAVASCRIPT LOGIC & STATE PERSISTENCE -->
+    <script>
+        // DEFAULT INITIAL DATA SEEDS
+        const INITIAL_MARKETPLACE = [
+            {
+                id: 'p1',
+                title: 'Organic Fresh Tomatoes',
+                category: 'Organic Produce',
+                price: 40,
+                unit: 'per Kg',
+                farmer: 'Sukhwinder Singh (Punjab)',
+                image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=500&q=80',
+                rating: '4.9'
+            },
+            {
+                id: 'p2',
+                title: 'Sharbati Quality Wheat Seeds',
+                category: 'Grains & Crops',
+                price: 2100,
+                unit: 'per 50Kg Bag',
+                farmer: 'Ramesh Patel (Madhya Pradesh)',
+                image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=500&q=80',
+                rating: '4.8'
+            },
+            {
+                id: 'p3',
+                title: 'Solar Powered Irrigation Sprinkler',
+                category: 'Tools & Seeds',
+                price: 3499,
+                unit: 'per Unit',
+                farmer: 'AgriTech Tools Co.',
+                image: 'https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?auto=format&fit=crop&w=500&q=80',
+                rating: '5.0'
+            },
+            {
+                id: 'p4',
+                title: 'Pure Farm Organic Honey',
+                category: 'Organic Produce',
+                price: 350,
+                unit: 'per 500g',
+                farmer: 'Himachal Apiary',
+                image: 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?auto=format&fit=crop&w=500&q=80',
+                rating: '4.7'
+            }
+        ];
+
+        const INITIAL_FORUM_POSTS = [
+            {
+                id: 'f1',
+                author: 'Mahesh Verma',
+                time: '2 hours ago',
+                title: 'Best organic method to clear pest attack on Cotton leaves?',
+                body: 'Noticed minor leaf curling on my cotton crop. Looking for natural neem-oil remedies before using chemical sprays.',
+                likes: 12,
+                comments: 4
+            },
+            {
+                id: 'f2',
+                author: 'Dr. Anita Roy (Agronomist)',
+                time: '5 hours ago',
+                title: 'Guide: Drip Irrigation maintenance for upcoming summer season',
+                body: 'Ensure you flush your sub-mains with a mild acid wash to prevent mineral scaling in emitters before temperatures spike.',
+                likes: 29,
+                comments: 8
+            }
+        ];
+
+        // LOCAL STORAGE STATE INITIALIZATION
+        let marketplaceItems = JSON.parse(localStorage.getItem('agri_marketplace')) || INITIAL_MARKETPLACE;
+        let forumPosts = JSON.parse(localStorage.getItem('agri_forum')) || INITIAL_FORUM_POSTS;
+        let cart = JSON.parse(localStorage.getItem('agri_cart')) || [];
+        let activeCategory = 'All';
+
+        // ON LOAD INITIALIZER
+        window.onload = function() {
+            renderMarketplace();
+            renderForumPosts();
+            updateCartUI();
+            generateAdvisory();
+            initChart();
+        }
+
+        // TOAST NOTIFICATION UTILITY
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto px-4 py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center space-x-2 text-white transition transform duration-300 translate-y-2 ${type === 'success' ? 'bg-emerald-600' : 'bg-slate-800'}`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // MARKETPLACE RENDER & FILTER LOGIC
+        function filterCategory(cat) {
+            activeCategory = cat;
+            document.querySelectorAll('.cat-filter-btn').forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.className = 'cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-agri-600 text-white';
+                } else {
+                    btn.className = 'cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700';
+                }
+            });
+            renderMarketplace();
+        }
+
+        function renderMarketplace() {
+            const grid = document.getElementById('marketplaceGrid');
+            const searchQuery = document.getElementById('marketSearch').value.toLowerCase();
+
+            const filtered = marketplaceItems.filter(item => {
+                const matchesCat = activeCategory === 'All' || item.category === activeCategory;
+                const matchesSearch = item.title.toLowerCase().includes(searchQuery) || item.farmer.toLowerCase().includes(searchQuery);
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">No produce or tools found matching criteria.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:shadow-xl transition group flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-44 overflow-hidden bg-slate-200">
+                            <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/400x300/16a34a/ffffff?text=${encodeURIComponent(item.title)}'">
+                            <span class="absolute top-3 left-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-xs font-bold px-2.5 py-1 rounded-lg text-agri-700 dark:text-agri-400">
+                                ${item.category}
+                            </span>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <div class="flex items-center justify-between text-xs text-slate-500">
+                                <span><i class="fa-solid fa-user-tag mr-1 text-agri-600"></i> ${item.farmer}</span>
+                                <span class="text-amber-500 font-bold"><i class="fa-solid fa-star"></i> ${item.rating || '4.8'}</span>
+                            </div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-base leading-snug">${item.title}</h3>
+                        </div>
+                    </div>
+
+                    <div class="p-4 pt-0 flex items-center justify-between border-t border-slate-200/60 dark:border-slate-700/50 mt-3">
+                        <div>
+                            <span class="text-xl font-extrabold text-agri-700 dark:text-agri-400">₹${item.price}</span>
+                            <span class="text-xs text-slate-500 font-medium">${item.unit}</span>
+                        </div>
+                        <button onclick="addToCart('${item.id}')" class="bg-agri-600 hover:bg-agri-700 text-white p-2.5 rounded-xl text-sm font-bold shadow transition active:scale-95">
+                            <i class="fa-solid fa-plus mr-1"></i> Add
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // CART LOGIC
+        function addToCart(itemId) {
+            const item = marketplaceItems.find(i => i.id === itemId);
+            if (!item) return;
+
+            const existing = cart.find(c => c.id === itemId);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...item, qty: 1 });
+            }
+
+            saveCart();
+            showToast(`Added ${item.title} to cart`);
+        }
+
+        function saveCart() {
+            localStorage.setItem('agri_cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cartBadge');
+            const totalQty = cart.reduce((acc, i) => acc + i.qty, 0);
+            badge.innerText = totalQty;
+            badge.className = `absolute -top-1 -right-1 bg-agri-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transition-transform ${totalQty > 0 ? 'scale-100' : 'scale-0'}`;
+
+            const list = document.getElementById('cartItemsList');
+            const totalEl = document.getElementById('cartTotal');
+
+            if (cart.length === 0) {
+                list.innerHTML = `<p class="text-center text-slate-400 py-8">Your cart is currently empty.</p>`;
+                totalEl.innerText = '₹0';
+                return;
+            }
+
+            let total = 0;
+            list.innerHTML = cart.map(item => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                return `
+                    <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                        <div>
+                            <p class="font-bold text-sm text-slate-900 dark:text-white">${item.title}</p>
+                            <p class="text-xs text-slate-500">₹${item.price} × ${item.qty}</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-sm text-agri-600">₹${subtotal}</span>
+                            <button onclick="removeFromCart('${item.id}')" class="text-rose-500 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            totalEl.innerText = `₹${total}`;
+        }
+
+        function removeFromCart(itemId) {
+            cart = cart.filter(c => c.id !== itemId);
+            saveCart();
+        }
+
+        function checkoutCart() {
+            if (cart.length === 0) return;
+            cart = [];
+            saveCart();
+            toggleCartModal();
+            showToast('Direct Farmer Order Placed Successfully!');
+        }
+
+        function toggleCartModal() {
+            document.getElementById('cartModal').classList.toggle('hidden');
+        }
+
+        // MARKETPLACE FORM MODAL LOGIC
+        function openListingModal() { document.getElementById('listingModal').classList.remove('hidden'); }
+        function closeListingModal() { document.getElementById('listingModal').classList.add('hidden'); }
+
+        function submitNewListing(e) {
+            e.preventDefault();
+            const newItem = {
+                id: 'p_' + Date.now(),
+                title: document.getElementById('mTitle').value,
+                category: document.getElementById('mCat').value,
+                price: parseFloat(document.getElementById('mPrice').value),
+                unit: document.getElementById('mUnit').value,
+                farmer: document.getElementById('mFarmer').value,
+                image: document.getElementById('mImg').value || 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=500&q=80',
+                rating: '5.0'
+            };
+
+            marketplaceItems.unshift(newItem);
+            localStorage.setItem('agri_marketplace', JSON.stringify(marketplaceItems));
+            renderMarketplace();
+            closeListingModal();
+            document.getElementById('listingForm').reset();
+            showToast('Your produce listing is now live!');
+        }
+
+        // SMART CROP ADVISORY ENGINE
+        function generateAdvisory() {
+            const crop = document.getElementById('advCrop').value;
+            const soil = document.getElementById('advSoil').value;
+            const region = document.getElementById('advRegion').value;
+            const container = document.getElementById('advisoryResult');
+
+            const database = {
+                wheat: {
+                    sowing: 'Ideal sowing window is November 1 - November 20. Seed rate: 100 kg/ha.',
+                    fertilizer: 'N:P:K Ratio of 120:60:40 kg/ha. Apply 1/2 Nitrogen at sowing, remaining split during crown root initiation.',
+                    pestAlert: 'Low risk of Yellow Rust. Spray Propiconazole 25% EC if yellow streaks appear.',
+                    water: 'Critical irrigation required at Crown Root Initiation (CRI) stage (~21 days post sowing).'
+                },
+                rice: {
+                    sowing: 'Transplanting window recommended during early monsoon arrival.',
+                    fertilizer: 'Incorporate organic green manure or apply N:P:K 100:50:50 kg/ha.',
+                    pestAlert: 'Monitor for Stem Borer. Use pheromone traps @ 8 traps/ha.',
+                    water: 'Maintain 2-5 cm standing water during tillering and panicle initiation.'
+                },
+                cotton: {
+                    sowing: 'Maintain 90x60 cm spacing for hybrid varieties.',
+                    fertilizer: 'Apply rich organic compost along with balanced micronutrient Zinc Sulphate (25 kg/ha).',
+                    pestAlert: 'Pink Bollworm advisory: Install sticky traps; spray Neem formulation 1500 ppm.',
+                    water: 'Avoid waterlogging; ensure ridge-and-furrow drainage setup.'
+                },
+                sugarcane: {
+                    sowing: 'Deep trench planting with 120 cm row-to-row spacing.',
+                    fertilizer: 'High Nitrogen demand: Apply 250 kg N/ha in 3 split doses.',
+                    pestAlert: 'Watch for Pyrilla & Early Shoot Borer.',
+                    water: 'Alternate furrow irrigation recommended to conserve 30% water.'
+                },
+                tomato: {
+                    sowing: 'Prepare raised nursery beds; transplant 25-30 day old seedlings.',
+                    fertilizer: 'High Potassium requirement during fruit development stage.',
+                    pestAlert: 'Tomato Leaf Miner alert. Use yellow sticky cards for early detection.',
+                    water: 'Drip irrigation recommended to minimize leaf wetness and fungal blights.'
+                }
+            };
+
+            const info = database[crop] || database.wheat;
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+                        <span class="text-xs font-bold uppercase tracking-wider text-agri-600 dark:text-agri-400">Tailored Advisory Report</span>
+                        <span class="text-xs text-slate-400">Soil: ${soil.toUpperCase()} • Region: ${region.toUpperCase()}</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-800">
+                            <h5 class="text-xs font-bold text-slate-500 uppercase flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-seedling text-agri-600"></i> Sowing & Spacing
+                            </h5>
+                            <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">${info.sowing}</p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-800">
+                            <h5 class="text-xs font-bold text-slate-500 uppercase flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-flask text-indigo-500"></i> Soil & Nutrient Management
+                            </h5>
+                            <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">${info.fertilizer}</p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/50">
+                            <h5 class="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-bug text-amber-600"></i> Pest & Disease Protection
+                            </h5>
+                            <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">${info.pestAlert}</p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-900/50">
+                            <h5 class="text-xs font-bold text-blue-700 dark:text-blue-400 uppercase flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-droplet text-blue-600"></i> Precision Irrigation
+                            </h5>
+                            <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">${info.water}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // COMMUNITY FORUM LOGIC
+        function renderForumPosts() {
+            const list = document.getElementById('forumList');
+            if (forumPosts.length === 0) {
+                list.innerHTML = `<p class="text-center text-slate-400 py-8">No community posts yet. Be the first to start a discussion!</p>`;
+                return;
+            }
+
+            list.innerHTML = forumPosts.map(post => `
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-agri-100 dark:bg-agri-950 text-agri-700 dark:text-agri-400 font-bold flex items-center justify-center">
+                                ${post.author.charAt(0)}
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white">${post.author}</h4>
+                                <p class="text-xs text-slate-400">${post.time}</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Agri Q&A</span>
+                    </div>
+
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">${post.title}</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 mb-4 line-clamp-2">${post.body}</p>
+
+                    <div class="flex items-center space-x-6 text-xs text-slate-500 border-t border-slate-100 dark:border-slate-800/80 pt-3">
+                        <button onclick="likePost('${post.id}')" class="hover:text-agri-600 font-semibold flex items-center space-x-1.5">
+                            <i class="fa-regular fa-thumbs-up"></i>
+                            <span>${post.likes} Helpful</span>
+                        </button>
+                        <span class="flex items-center space-x-1.5 font-semibold">
+                            <i class="fa-regular fa-comment"></i>
+                            <span>${post.comments} Replies</span>
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openForumModal() { document.getElementById('forumModal').classList.remove('hidden'); }
+        function closeForumModal() { document.getElementById('forumModal').classList.add('hidden'); }
+
+        function submitForumPost(e) {
+            e.preventDefault();
+            const newPost = {
+                id: 'f_' + Date.now(),
+                author: document.getElementById('fAuthor').value,
+                time: 'Just now',
+                title: document.getElementById('fTitle').value,
+                body: document.getElementById('fBody').value,
+                likes: 0,
+                comments: 0
+            };
+
+            forumPosts.unshift(newPost);
+            localStorage.setItem('agri_forum', JSON.stringify(forumPosts));
+            renderForumPosts();
+            closeForumModal();
+            document.getElementById('forumForm').reset();
+            showToast('Question posted to community forum!');
+        }
+
+        function likePost(postId) {
+            const post = forumPosts.find(f => f.id === postId);
+            if (post) {
+                post.likes += 1;
+                localStorage.setItem('agri_forum', JSON.stringify(forumPosts));
+                renderForumPosts();
+            }
+        }
+
+        // CONTACT FORM SUBMISSION
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('cName').value;
+            showToast(`Thank you ${name}, our agricultural advisor will call you shortly.`);
+            document.getElementById('contactForm').reset();
+        }
+
+        // MOBILE NAV TOGGLE
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        // CHART JS MANDI INITIALIZATION
+        function initChart() {
+            const ctx = document.getElementById('mandiChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                    datasets: [
+                        {
+                            label: 'Wheat (₹/Qtl)',
+                            data: [2100, 2150, 2180, 2220, 2250, 2280],
+                            borderColor: '#16a34a',
+                            backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Basmati Rice (₹/Qtl)',
+                            data: [3900, 3950, 4020, 4080, 4100, 4150],
+                            borderColor: '#d97706',
+                            backgroundColor: 'rgba(217, 119, 6, 0.05)',
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    },
+                    scales: {
+                        y: { grid: { borderDash: [4, 4] } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
